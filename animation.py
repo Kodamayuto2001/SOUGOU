@@ -1014,7 +1014,7 @@ class MyAnimation(
         self.wait()
         self.play(self.get_zoomed_display_pop_out_animation(), unfold_camera, rate_func=lambda t: smooth(1 - t))
         self.play(Uncreate(zoomed_display_frame), FadeOut(frame))
-        self.remove(img)
+        #####   self.remove(img)
         self.wait()
 
     def test4(self):
