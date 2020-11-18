@@ -389,6 +389,7 @@ class MyAnimation(
             self.camera_frame.set_width,self.kodamaTrainImg.get_width()*4,
         )
         
+        #####-----ANY px X ANY px-----#####
         text = TextMobject(
             "data\\\\",
             "(",
