@@ -37,7 +37,7 @@ class NeuralNetworkAnimation(ZoomedScene):
             while True:
                 a = neurons[l0].get_center()
                 b = neurons[inputLayer+l1].get_center()
-                forward.add(Line(a,b,stroke_width=np.random.randint(0,1,1)))
+                forward.add(Line(a,b,stroke_width=np.random.randint(0,2,1)))
                 if l1 == 1:
                     break
                 l1 -= 1
@@ -50,7 +50,7 @@ class NeuralNetworkAnimation(ZoomedScene):
             while True:
                 a = neurons[inputLayer+l1].get_center()
                 b = neurons[inputLayer+hiddenLayer+l2].get_center()
-                forward.add(Line(a,b,stroke_width=np.random.randint(0,1,1)))
+                forward.add(Line(a,b,stroke_width=np.random.randint(0,2,1)))
                 if l2 == 1:
                     break
                 l2 -= 1
@@ -67,7 +67,7 @@ class NeuralNetworkAnimation(ZoomedScene):
             while True:
                 a = neurons[inputLayer+l1].get_center()
                 b = neurons[inputLayer+hiddenLayer+l2].get_center()
-                backward.add(Line(b,a,stroke_width=np.random.randint(0,1,1)))
+                backward.add(Line(b,a,stroke_width=np.random.randint(0,2,1)))
                 if l2 == 1:
                     break
                 l2 -= 1
@@ -80,7 +80,7 @@ class NeuralNetworkAnimation(ZoomedScene):
             while True:
                 a = neurons[l0].get_center()
                 b = neurons[inputLayer+l1].get_center()
-                backward.add(Line(b,a,stroke_width=np.random.randint(0,1,1)))
+                backward.add(Line(b,a,stroke_width=np.random.randint(0,2,1)))
                 if l1 == 1:
                     break
                 l1 -= 1
@@ -89,6 +89,10 @@ class NeuralNetworkAnimation(ZoomedScene):
             l0 -= 1
 
         self.add(neurons)
+        self.play(Write(forward))
+        self.play(Write(backward))
+        self.play(Write(forward))
+        self.play(Write(backward))
         self.play(Write(forward))
         self.play(Write(backward))
         self.__targetZoomCam(neurons[10])           
