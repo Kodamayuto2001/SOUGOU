@@ -1,6 +1,6 @@
 from manimlib.imports import *
 
-class MyAnimation(ZoomedScene):
+class NeuralNetworkAnimation(ZoomedScene):
     def construct(self):
         self.__NeuralNetwork(
             inputLayer  = 20,
@@ -15,7 +15,8 @@ class MyAnimation(ZoomedScene):
     def __NeuralNetwork(self,inputLayer,hiddenLayer,outputLayer,neuron,buff):
         cnt = 0
         neurons = VGroup()
-        synapse = VGroup()
+        forward = VGroup()
+        backward= VGroup()
         
         while True:
             if cnt == inputLayer+hiddenLayer+outputLayer+1:
@@ -28,13 +29,15 @@ class MyAnimation(ZoomedScene):
             else:
                 neurons.add(neuron.copy().shift(DOWN*buff*int(cnt-(inputLayer+hiddenLayer+(outputLayer)/2))).shift(RIGHT*4))
             cnt += 1
+
+        # forward
         l0 = inputLayer
         while True:
             l1 = hiddenLayer
             while True:
                 a = neurons[l0].get_center()
                 b = neurons[inputLayer+l1].get_center()
-                synapse.add(Line(a,b,stroke_width=np.random.randint(0,3,1)))
+                forward.add(Line(a,b,stroke_width=np.random.randint(0,1,1)))
                 if l1 == 1:
                     break
                 l1 -= 1
@@ -47,16 +50,47 @@ class MyAnimation(ZoomedScene):
             while True:
                 a = neurons[inputLayer+l1].get_center()
                 b = neurons[inputLayer+hiddenLayer+l2].get_center()
-                synapse.add(Line(a,b,stroke_width=np.random.randint(1,4,1)))
+                forward.add(Line(a,b,stroke_width=np.random.randint(0,1,1)))
                 if l2 == 1:
                     break
                 l2 -= 1
-            if l1 == 0:
+            if l1 == 1:
                 break
             l1 -= 1
+        # print(neurons[0].get_center())
+        # print(neurons[20].get_center())
+
+        # backward
+        l1 = hiddenLayer
+        while True:
+            l2 = outputLayer
+            while True:
+                a = neurons[inputLayer+l1].get_center()
+                b = neurons[inputLayer+hiddenLayer+l2].get_center()
+                backward.add(Line(b,a,stroke_width=np.random.randint(0,1,1)))
+                if l2 == 1:
+                    break
+                l2 -= 1
+            if l1 == 1:
+                break
+            l1 -= 1
+        l0 = inputLayer
+        while True:
+            l1 = hiddenLayer
+            while True:
+                a = neurons[l0].get_center()
+                b = neurons[inputLayer+l1].get_center()
+                backward.add(Line(b,a,stroke_width=np.random.randint(0,1,1)))
+                if l1 == 1:
+                    break
+                l1 -= 1
+            if l0 == 0:
+                break 
+            l0 -= 1
 
         self.add(neurons)
-        self.add(synapse)    
+        self.play(Write(forward))
+        self.play(Write(backward))
         self.__targetZoomCam(neurons[10])           
         pass 
 
