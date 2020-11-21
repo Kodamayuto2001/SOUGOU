@@ -1,4 +1,5 @@
 from manimlib.imports import *
+import cv2 
 
 class MyAnimation(ZoomedScene):
     def construct(self):
@@ -28,9 +29,6 @@ class MyAnimation(ZoomedScene):
             else:
                 neurons.add(neuron.copy().shift(DOWN*buff*int(cnt-(inputLayer+hiddenLayer+(outputLayer)/2))).shift(RIGHT*4))
             cnt += 1
-
-        self.add(neurons)
-
         l0 = inputLayer
         while True:
             l1 = hiddenLayer
@@ -57,13 +55,40 @@ class MyAnimation(ZoomedScene):
             if l1 == 0:
                 break
             l1 -= 1
-        self.add(
-            synapse
-        )               
+
+        self.add(neurons)
+        self.add(synapse)    
+        self.__targetZoomCam(neurons[10])           
         pass 
 
-    def __targetZoomCam(self):
-        
+    def __targetZoomCam(self,target):
+        zoomedCamera        = self.zoomed_camera
+        zoomedDisplay       = self.zoomed_display
+        frame               = zoomedCamera.frame
+        zoomedDisplayFrame  = zoomedDisplay.display_frame
+
+        frame.move_to(target)
+        frame.set_color(color=[RED,BLUE])
+
+        zd_rect = BackgroundRectangle(zoomedDisplay, fill_opacity=0, buff=MED_SMALL_BUFF)
+        self.add_foreground_mobject(zd_rect)
+        unfold_camera = UpdateFromFunc(zd_rect, lambda rect: rect.replace(zoomedDisplay))
+
+        self.play(
+            Write(frame)
+        )
+        self.activate_zooming()
+        self.play(self.get_zoomed_display_pop_out_animation())
+        self.play(
+            self.get_zoomed_display_pop_out_animation(),
+            unfold_camera,
+            rate_func=lambda t: smooth(1 - t),
+        )
+        self.play(
+            Uncreate(zoomedDisplayFrame), 
+            FadeOut(frame),
+        )
+
         pass 
 
 
