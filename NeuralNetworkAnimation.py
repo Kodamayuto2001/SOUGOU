@@ -1,5 +1,4 @@
 from manimlib.imports import *
-import cv2 
 
 class MyAnimation(ZoomedScene):
     def construct(self):
