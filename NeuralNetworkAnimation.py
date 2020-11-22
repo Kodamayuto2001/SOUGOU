@@ -7,9 +7,10 @@ class NeuralNetworkAnimation(ZoomedScene):
             hiddenLayer = 16,
             outputLayer = 6,
             neuron      = Dot(),
+            # neuron      = Circle(color=WHITE),
+            # neuron      = Annulus(inner_radius=0.0,outer_radius=1,color=WHITE).scale(0.1),
             buff        = 0.3
         )
-        pass
         self.wait(10)
 
     def __NeuralNetwork(self,inputLayer,hiddenLayer,outputLayer,neuron,buff):
@@ -23,12 +24,17 @@ class NeuralNetworkAnimation(ZoomedScene):
                 break
 
             if cnt <= inputLayer:
+                # print(cnt)
                 neurons.add(neuron.copy().shift(DOWN*buff*int(cnt-inputLayer/2)).shift(ORIGIN))
             elif cnt <= inputLayer+hiddenLayer:
+                # print(cnt)
                 neurons.add(neuron.copy().shift(DOWN*buff*int(cnt-(inputLayer+hiddenLayer/2))).shift(RIGHT*2))
             else:
+                # print(cnt)
                 neurons.add(neuron.copy().shift(DOWN*buff*int(cnt-(inputLayer+hiddenLayer+(outputLayer)/2))).shift(RIGHT*4))
             cnt += 1
+
+        # print(inputLayer+hiddenLayer)
 
         # forward
         l0 = inputLayer
@@ -44,36 +50,38 @@ class NeuralNetworkAnimation(ZoomedScene):
             if l0 == 0:
                 break 
             l0 -= 1
-        l1 = hiddenLayer
-        while True:
-            l2 = outputLayer
+        if outputLayer != 0:
+            l1 = hiddenLayer
             while True:
-                a = neurons[inputLayer+l1].get_center()
-                b = neurons[inputLayer+hiddenLayer+l2].get_center()
-                forward.add(Line(a,b,stroke_width=np.random.randint(0,2,1)))
-                if l2 == 1:
+                l2 = outputLayer
+                while True:
+                    a = neurons[inputLayer+l1].get_center()
+                    b = neurons[inputLayer+hiddenLayer+l2].get_center()
+                    forward.add(Line(a,b,stroke_width=np.random.randint(0,2,1)))
+                    if l2 == 1:
+                        break
+                    l2 -= 1
+                if l1 == 1:
                     break
-                l2 -= 1
-            if l1 == 1:
-                break
-            l1 -= 1
+                l1 -= 1
         # print(neurons[0].get_center())
         # print(neurons[20].get_center())
 
         # backward
-        l1 = hiddenLayer
-        while True:
-            l2 = outputLayer
+        if outputLayer != 0:
+            l1 = hiddenLayer
             while True:
-                a = neurons[inputLayer+l1].get_center()
-                b = neurons[inputLayer+hiddenLayer+l2].get_center()
-                backward.add(Line(b,a,stroke_width=np.random.randint(0,2,1)))
-                if l2 == 1:
+                l2 = outputLayer
+                while True:
+                    a = neurons[inputLayer+l1].get_center()
+                    b = neurons[inputLayer+hiddenLayer+l2].get_center()
+                    backward.add(Line(b,a,stroke_width=np.random.randint(0,2,1)))
+                    if l2 == 1:
+                        break
+                    l2 -= 1
+                if l1 == 1:
                     break
-                l2 -= 1
-            if l1 == 1:
-                break
-            l1 -= 1
+                l1 -= 1
         l0 = inputLayer
         while True:
             l1 = hiddenLayer
@@ -88,14 +96,17 @@ class NeuralNetworkAnimation(ZoomedScene):
                 break 
             l0 -= 1
 
+        # self.add(neurons)
+        # self.play(Write(forward))
+        # self.play(Write(backward))
+        # self.__targetZoomCam(neurons[10]) 
+ 
+
+        forward.set_color(color=BLUE)  
+        backward.set_color(color=RED)
         self.add(neurons)
-        self.play(Write(forward))
+        self.play(Write(forward)) 
         self.play(Write(backward))
-        self.play(Write(forward))
-        self.play(Write(backward))
-        self.play(Write(forward))
-        self.play(Write(backward))
-        self.__targetZoomCam(neurons[10])           
         pass 
 
     def __targetZoomCam(self,target):
@@ -127,7 +138,3 @@ class NeuralNetworkAnimation(ZoomedScene):
         )
 
         pass 
-
-
-
-        
