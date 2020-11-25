@@ -307,7 +307,7 @@ class Preprocessing(Scene):
 
 
     def orgImg(self,path,posX,posY):
-        self.img = cv2.imread("assets/Resources/train/ando/0.jpg")
+        self.img = cv2.imread(path)
         # RGB
         self.img    = cv2.cvtColor(self.img,cv2.COLOR_BGR2RGB)
         self.imgMob = ImageMobject(self.img)
